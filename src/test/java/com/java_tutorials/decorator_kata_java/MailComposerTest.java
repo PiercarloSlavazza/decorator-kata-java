@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static com.java_tutorials.decorator_kata_java.MailBoxLog.LOG_EVENT.SAVED_TO_DRAFT;
+import static com.java_tutorials.decorator_kata_java.MailBoxLog.LOG_EVENT.COMPOSED_EMAIL;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
@@ -109,7 +109,7 @@ public class MailComposerTest {
          */
         Date expectedDateOfSaveEvent = buildDate(2021, Calendar.FEBRUARY, 1, 15, 2);
         MailBoxUser mailBoxUser = new MailBoxUser("user_1");
-        MailBoxLog expectedMailBoxLog = new MailBoxLog(expected, expectedDateOfSaveEvent, SAVED_TO_DRAFT, mailBoxUser);
+        MailBoxLog expectedMailBoxLog = new MailBoxLog(expected, expectedDateOfSaveEvent, COMPOSED_EMAIL, mailBoxUser);
 
         mailComposer.composeEmail(mailBoxUser, emailAddress, mailBody);
 

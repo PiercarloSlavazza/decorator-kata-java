@@ -6,7 +6,7 @@ import java.util.Objects;
 public class MailBoxLog {
 
     public enum LOG_EVENT {
-        SAVED_TO_DRAFT
+	COMPOSED_EMAIL
     }
 
     private final Email email;
