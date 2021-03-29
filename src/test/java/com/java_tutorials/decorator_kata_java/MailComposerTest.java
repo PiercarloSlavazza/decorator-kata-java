@@ -2,7 +2,7 @@ package com.java_tutorials.decorator_kata_java;
 
 import com.java_tutorials.decorator_kata_java.impl.EmailBodyHtml;
 import com.java_tutorials.decorator_kata_java.impl.EmailBodyPlainText;
-import com.java_tutorials.decorator_kata_java.impl.MailBoxFactoryImpl;
+import com.java_tutorials.decorator_kata_java.impl.MailComposerFactoryImpl;
 import com.java_tutorials.decorator_kata_java.impl.MailBoxLogsInMemory;
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class MailComposerTest {
     public void shouldReturnPlainTextEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailBoxFactoryImpl(() -> expectedDateOfEmail).openMailBox();
+        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         EmailBody emailBody = new EmailBodyPlainText("Lorem Ipsum.");
@@ -44,7 +44,7 @@ public class MailComposerTest {
     public void shouldReturnHtmlEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailBoxFactoryImpl(() -> expectedDateOfEmail).openMailBox();
+        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         EmailBody emailBody = new EmailBodyPlainText("<h1>Lorem Ipsum.</h1>");
@@ -58,7 +58,7 @@ public class MailComposerTest {
     public void shouldAddEcoFriendlyFooterToPlainTextEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailBoxFactoryImpl(() -> expectedDateOfEmail).openMailBox();
+        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String plainTextBody = "Lorem Ipsum.";
@@ -75,7 +75,7 @@ public class MailComposerTest {
     public void shouldAddEcoFriendlyFooterToHtmlEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailBoxFactoryImpl(() -> expectedDateOfEmail).openMailBox();
+        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String htmlBodyCode = "<h1>Lorem Ipsum.</h1>";
@@ -94,7 +94,7 @@ public class MailComposerTest {
         MailBoxLogs mailBoxLogs = new MailBoxLogsInMemory();
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailBoxFactoryImpl(() -> expectedDateOfEmail).openMailBox();
+        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String plainTextBody = "Lorem Ipsum.";
