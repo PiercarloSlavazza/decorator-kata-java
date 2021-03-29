@@ -47,7 +47,7 @@ public class MailComposerTest {
         MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
-        EmailBody emailBody = new EmailBodyPlainText("<h1>Lorem Ipsum.</h1>");
+        EmailBody emailBody = new EmailBodyHtml("<h1>Lorem Ipsum.</h1>");
         Email expected = new Email(emailAddress, emailBody, expectedDateOfEmail);
 
         MailBoxUser mailBoxUser = new MailBoxUser("user_1");
@@ -89,7 +89,7 @@ public class MailComposerTest {
     }
 
     @Test
-    public void shouldAddEcoFriendlyFooterAndRecordDispatch() {
+    public void shouldAddEcoFriendlyFooterAndRecordLog() {
 
         MailBoxLogs mailBoxLogs = new MailBoxLogsInMemory();
 
