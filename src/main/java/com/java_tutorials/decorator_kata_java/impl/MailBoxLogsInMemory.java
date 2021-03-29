@@ -10,6 +10,10 @@ public class MailBoxLogsInMemory implements MailBoxLogs {
 
     private final List<MailBoxLog> mailBoxLogs = new ArrayList<>();
 
+    @Override public void logEventForUser(MailBoxLog mailBoxLog) {
+	mailBoxLogs.add(mailBoxLog);
+    }
+
     @Override public List<MailBoxLog> listLogsForUser() {
 	return new ArrayList<>(mailBoxLogs);
     }

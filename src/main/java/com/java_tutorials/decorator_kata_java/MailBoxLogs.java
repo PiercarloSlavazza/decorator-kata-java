@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface MailBoxLogs {
 
+    void logEventForUser(MailBoxLog mailBoxLog);
     List<MailBoxLog> listLogsForUser();
 
 }

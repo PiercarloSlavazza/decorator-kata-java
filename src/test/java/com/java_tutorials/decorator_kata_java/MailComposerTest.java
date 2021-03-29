@@ -1,9 +1,6 @@
 package com.java_tutorials.decorator_kata_java;
 
-import com.java_tutorials.decorator_kata_java.impl.EmailBodyHtml;
-import com.java_tutorials.decorator_kata_java.impl.EmailBodyPlainText;
-import com.java_tutorials.decorator_kata_java.impl.MailComposerFactoryImpl;
-import com.java_tutorials.decorator_kata_java.impl.MailBoxLogsInMemory;
+import com.java_tutorials.decorator_kata_java.impl.*;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -26,11 +23,27 @@ public class MailComposerTest {
         return calendar.getTime();
     }
 
+    private MailComposerFactoryImpl buildMailComposerFactoryImpl(Date expectedDateOfEmail) {
+        return new MailComposerFactoryImpl(() -> expectedDateOfEmail);
+    }
+
+    private MailComposerWithEcoFriendlyFooterFactory buildMailComposerWithEcoFriendlyFooter(Date expectedDateOfEmail) {
+        return new MailComposerWithEcoFriendlyFooterFactory(buildMailComposerFactoryImpl(expectedDateOfEmail));
+    }
+
+    private MailComposerWithEcoFriendlyFooterAndLogsFactory buildMailComposerWithEcoFriendlyFooterAndLogs(Date expectedDateOfEmail,
+                                                                                                          MailBoxLogs mailBoxLogs,
+                                                                                                          Date dateOfSaveEvent) {
+        return new MailComposerWithEcoFriendlyFooterAndLogsFactory(buildMailComposerWithEcoFriendlyFooter(expectedDateOfEmail),
+                                                                   mailBoxLogs,
+                                                                   () -> dateOfSaveEvent);
+    }
+
     @Test
     public void shouldReturnPlainTextEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
+        MailComposer mailComposer = buildMailComposerFactoryImpl(expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         EmailBody emailBody = new EmailBodyPlainText("Lorem Ipsum.");
@@ -44,7 +57,7 @@ public class MailComposerTest {
     public void shouldReturnHtmlEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
+        MailComposer mailComposer = buildMailComposerFactoryImpl(expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         EmailBody emailBody = new EmailBodyHtml("<h1>Lorem Ipsum.</h1>");
@@ -58,7 +71,7 @@ public class MailComposerTest {
     public void shouldAddEcoFriendlyFooterToPlainTextEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
+        MailComposer mailComposer = buildMailComposerWithEcoFriendlyFooter(expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String plainTextBody = "Lorem Ipsum.";
@@ -75,7 +88,7 @@ public class MailComposerTest {
     public void shouldAddEcoFriendlyFooterToHtmlEmail() {
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
+        MailComposer mailComposer = buildMailComposerWithEcoFriendlyFooter(expectedDateOfEmail).buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String htmlBodyCode = "<h1>Lorem Ipsum.</h1>";
@@ -91,10 +104,15 @@ public class MailComposerTest {
     @Test
     public void shouldAddEcoFriendlyFooterAndRecordLog() {
 
+        Date expectedDateOfSaveEvent = buildDate(2021, Calendar.FEBRUARY, 1, 15, 2);
         MailBoxLogs mailBoxLogs = new MailBoxLogsInMemory();
 
         Date expectedDateOfEmail = buildDate(2021, Calendar.FEBRUARY, 1, 15, 1);
-        MailComposer mailComposer = new MailComposerFactoryImpl(() -> expectedDateOfEmail).buildMailComposer();
+        MailComposer mailComposer =
+                        buildMailComposerWithEcoFriendlyFooterAndLogs(expectedDateOfEmail,
+                                                                      mailBoxLogs,
+                                                                      expectedDateOfSaveEvent).
+                                        buildMailComposer();
 
         EmailAddress emailAddress = new EmailAddress("john@example.com");
         String plainTextBody = "Lorem Ipsum.";
@@ -107,7 +125,6 @@ public class MailComposerTest {
         Please note that we always want to have full control about time in tests:
         therefore, access to present time should be testable in classes under test.
          */
-        Date expectedDateOfSaveEvent = buildDate(2021, Calendar.FEBRUARY, 1, 15, 2);
         MailBoxUser mailBoxUser = new MailBoxUser("user_1");
         MailBoxLog expectedMailBoxLog = new MailBoxLog(expected, expectedDateOfSaveEvent, COMPOSED_EMAIL, mailBoxUser);
 
